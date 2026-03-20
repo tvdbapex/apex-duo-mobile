@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apex Duo Mobile</title>
+  <link rel="icon" href="data:,">
+  <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=gbVXPPbPg-vDoDD59TYvXggpy1zhjWrMDeaorzF6dlsDNCnPyraz5nS9sYMzVdhm615Hmtn_0rhXdy7IMZI0JV3Dp1NvsRefKS1crwdde5QyHxNmHV1KfU1yKzbAGNyrNzBKhI3fmAfQgaZcMoKeVO5nrJmnnyRB6Sfd5LeCJwtE8wFdyGtcmP1wE2nOWbq8xN6kznWG935HCYbeWTjZgQqh5PhYyy40u2DeNpVlT341yiBYK2jlSGY9g7LyNDSFXUKPyLm_QQIYLqPHvF2oog" charset="UTF-8"></script><style>
+    :root{
+      --bg:#070a0f;
+      --bg2:#0b1119;
+      --panel:rgba(15,22,34,.9);
+      --line:rgba(255,255,255,.08);
+      --text:#f6f8fb;
+      --muted:#97a4b5;
+      --accent:#ff6a2b;
+      --accent2:#ff9a3c;
+      --glow:0 12px 40px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    html,body{
+      margin:0;padding:0;min-height:100%;
+      background:
+        radial-gradient(circle at 12% 0%, rgba(255,106,43,.14), transparent 30%),
+        radial-gradient(circle at 88% 8%, rgba(50,120,255,.12), transparent 28%),
+        linear-gradient(180deg,var(--bg),var(--bg2));
+      color:var(--text);
+      font-family:Arial,sans-serif;
+    }
+    body{overflow-x:hidden}
+    .wrap{max-width:760px;margin:0 auto;padding:12px}
+    .topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:10px}
+    h1{margin:0;font-size:42px;line-height:.95;letter-spacing:-.04em}
+    .subtitle{margin-top:8px;color:var(--muted);font-size:14px}
+    .controls,.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .controls{width:100%;margin-bottom:8px}
+    .tabs{margin-bottom:8px}
+    button{
+      border:1px solid var(--line);border-radius:16px;padding:12px;
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      color:var(--text);cursor:pointer;font-size:14px;font-weight:800;
+      transition:.15s ease;box-shadow:var(--glow);min-height:48px;
+    }
+    button:disabled{opacity:.55;cursor:default}
+    .primary{border:none;background:linear-gradient(180deg,var(--accent2),var(--accent));color:#fff}
+    .tab.active{border-color:rgba(255,106,43,.5);background:linear-gradient(180deg, rgba(255,106,43,.18), rgba(255,106,43,.06))}
+    .stage{min-height:18px;margin-bottom:8px;color:var(--muted);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-align:center}
+    .chaos-banner{
+      display:none;margin-bottom:10px;border-radius:18px;padding:12px 14px;
+      border:1px solid rgba(255,110,110,.35);
+      background:radial-gradient(circle at 20% 50%, rgba(255,255,255,.08), transparent 20%),linear-gradient(90deg, rgba(70,10,10,.92), rgba(145,23,23,.96));
+      box-shadow:0 16px 45px rgba(70,0,0,.35)
+    }
+    .chaos-banner.show{display:block}
+    .chaos-title{font-size:22px;font-weight:900;margin-bottom:4px}
+    .chaos-sub{font-size:13px;color:#ffe5e5;font-weight:700}
+    .card{
+      position:relative;overflow:hidden;min-height:390px;
+      background:radial-gradient(circle at 90% 10%, rgba(255,255,255,.06), transparent 25%),linear-gradient(180deg, rgba(14,20,31,.96), rgba(18,28,42,.94));
+      border:1px solid var(--line);border-radius:20px;box-shadow:var(--glow);margin-bottom:10px;
+    }
+    .card-content{position:relative;display:grid;grid-template-columns:1fr;min-height:390px}
+    .card-left{padding:14px 14px 8px;display:flex;flex-direction:column;gap:8px;z-index:2;position:relative}
+    .player-name{font-size:11px;color:var(--muted);letter-spacing:.18em;text-transform:uppercase;font-weight:700}
+    .legend-name{font-size:30px;line-height:.95;font-weight:900;letter-spacing:-.03em;min-height:30px;text-shadow:0 6px 18px rgba(0,0,0,.35)}
+    .weapons{margin-top:2px;display:grid;gap:8px}
+    .weapon-row{
+      display:grid;grid-template-columns:48px 1fr;align-items:center;gap:10px;padding:8px 10px;
+      border-radius:999px;border:1px solid rgba(255,255,255,.08);
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
+      min-height:52px;animation:weaponSlide .32s ease
+    }
+    @keyframes weaponSlide{0%{opacity:0;transform:translateX(-14px)}100%{opacity:1;transform:translateX(0)}}
+    .weapon-thumb-wrap{
+      width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+      background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.06);overflow:hidden;color:var(--muted);font-size:10px;font-weight:800
+    }
+    .weapon-thumb{width:36px;height:36px;object-fit:contain;display:block;filter:drop-shadow(0 6px 10px rgba(0,0,0,.35))}
+    .weapon-name{font-size:15px;font-weight:900;line-height:1.05}
+    .weapon-class{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-top:3px}
+    .card-right{position:relative;min-height:165px;padding:4px 10px 10px;display:flex;align-items:flex-end;justify-content:center}
+    .legend-image-wrap{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center;overflow:hidden;z-index:1}
+    .legend-image{width:100%;max-width:250px;max-height:165px;object-fit:contain;object-position:center bottom;opacity:.96;filter:drop-shadow(0 0 18px rgba(255,110,50,.18)) drop-shadow(0 14px 30px rgba(0,0,0,.42))}
+    .legend-fallback{
+      width:100%;max-width:210px;aspect-ratio:1;border-radius:16px;border:1px dashed rgba(255,255,255,.12);
+      background:radial-gradient(circle at 30% 20%, rgba(255,255,255,.08), transparent 30%),rgba(255,255,255,.03);
+      display:flex;align-items:center;justify-content:center;color:var(--muted);font-weight:900;font-size:16px;text-transform:uppercase;letter-spacing:.08em;padding:20px;text-align:center
+    }
+    .overlay-line{position:absolute;inset:auto 0 0 0;height:1px;background:linear-gradient(90deg, transparent, rgba(255,255,255,.22), transparent);z-index:2}
+    .more-wrap{margin-top:10px}
+    .more-content{display:none}
+    .more-content.open{display:block}
+    .stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0 12px}
+    .stat,.panel,.pool-panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px;box-shadow:var(--glow);backdrop-filter:blur(12px)}
+    .stat-label{color:var(--muted);font-size:10px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
+    .stat-value{font-size:26px;line-height:1;font-weight:900}
+    .panel h3,.pool-panel h3{margin:0 0 8px;font-size:16px}
+    .small{font-size:12px;color:var(--muted);line-height:1.5}
+    .pool-grid{display:grid;grid-template-columns:1fr;gap:10px}
+    .pool-box{min-height:auto;padding:12px;border:1px solid rgba(255,255,255,.06);border-radius:14px;background:rgba(255,255,255,.025)}
+    .pool-title{font-size:12px;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);margin-bottom:10px;font-weight:700}
+    .pool-list{display:flex;flex-wrap:wrap;gap:8px}
+    .pool-chip{font-size:12px;font-weight:700;padding:7px 9px;border-radius:999px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.035);color:var(--text)}
+    .desktop-note{margin-top:8px;font-size:11px;color:var(--muted);text-align:center}
+    @media (min-width:900px){
+      .wrap{max-width:1120px;padding:18px}
+      .controls{max-width:320px;margin-left:auto}
+      .tabs{max-width:320px;margin-left:auto}
+      .card-content{grid-template-columns:1.05fr .95fr;min-height:430px}
+      .card-left{padding:24px 22px 22px;gap:14px}
+      .player-name{font-size:14px}
+      .legend-name{font-size:54px;min-height:58px}
+      .weapon-row{grid-template-columns:64px 1fr;min-height:66px;padding:10px 12px}
+      .weapon-thumb-wrap,.weapon-thumb{width:52px;height:52px}
+      .weapon-name{font-size:22px}
+      .weapon-class{font-size:12px}
+      .card-right{min-height:430px;padding:16px}
+      .legend-image{max-width:520px;max-height:100%}
+      .legend-fallback{max-width:320px;border-radius:28px;font-size:22px}
+      .stats{grid-template-columns:repeat(4,1fr)}
+      .meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div>
+        <h1>Apex Duo Mobile</h1>
+        <div class="subtitle">Version 1. Local logic only. No sync. No sound.</div>
+      </div>
+      <div class="controls">
+        <button id="rollBtn" class="primary">Roll</button>
+        <button id="resetBtn">Reset All</button>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button id="showDjBtn" class="tab active" disabled>DJ</button>
+      <button id="showTvdbBtn" class="tab" disabled>TVDB</button>
+    </div>
+
+    <div id="stage" class="stage">Ready</div>
+
+    <div id="chaosBanner" class="chaos-banner">
+      <div class="chaos-title">CHAOS ROUND</div>
+      <div id="chaosText" class="chaos-sub">-</div>
+    </div>
+
+    <div class="card">
+      <div class="card-content">
+        <div class="card-left">
+          <div id="playerName" class="player-name">DJ READ</div>
+          <div id="legendName" class="legend-name">Waiting...</div>
+          <div id="weapons" class="weapons"></div>
+        </div>
+        <div class="card-right">
+          <div id="legendWrap" class="legend-image-wrap">
+            <div class="legend-fallback">Waiting...</div>
+          </div>
+          <div class="overlay-line"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="more-wrap">
+      <button id="moreBtn">More</button>
+      <div id="moreContent" class="more-content">
+        <div class="stats">
+          <div class="stat"><div class="stat-label">Legend Cycle</div><div id="legendCycleValue" class="stat-value">1</div></div>
+          <div class="stat"><div class="stat-label">Gun Cycle</div><div id="gunCycleValue" class="stat-value">1</div></div>
+          <div class="stat"><div class="stat-label">Legends Left</div><div id="legendsLeftValue" class="stat-value">27</div></div>
+          <div class="stat"><div class="stat-label">Guns Left</div><div id="gunsLeftValue" class="stat-value">26</div></div>
+        </div>
+
+        <div class="meta-grid">
+          <div class="pool-panel">
+            <h3>Remaining Pools</h3>
+            <div class="pool-grid">
+              <div class="pool-box">
+                <div class="pool-title">Legends Left</div>
+                <div id="remainingLegendsList" class="pool-list"></div>
+              </div>
+              <div class="pool-box">
+                <div class="pool-title">Guns Left</div>
+                <div id="remainingGunsList" class="pool-list"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h3>Rules</h3>
+            <div class="small">Local only for now. Unique legends each roll. No duplicate guns across both players. Ballistic gets 3 guns. Care package weapons stay excluded from rolls. Pistol chaos reveals normal first, then flips to pistols. Swap chaos reveals normal first, then swaps.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="desktop-note">Next versions can add sound, polish, and shared live sync.</div>
+  </div>
+
+  <script>
+    const PLAYER_ONE = "DJ READ";
+    const PLAYER_TWO = "TVDB";
+    const CHAOS_CHANCE = 0.05;
+
+    const CHARACTERS = ["Ash","Bangalore","Ballistic","Bloodhound","Catalyst","Caustic","Conduit","Crypto","Fuse","Gibraltar","Horizon","Lifeline","Loba","Mad Maggie","Mirage","Newcastle","Octane","Pathfinder","Rampart","Revenant","Seer","Valkyrie","Vantage","Wattson","Wraith","Alter","Sparrow"];
+    const GUNS = ["RE-45 Auto","Bocek Compound Bow","Alternator SMG","P2020","Charge Rifle","Prowler Burst PDW","Mozambique Shotgun","L-STAR EMG","R-99 SMG","Hemlok Burst AR","Triple Take","VK-47 Flatline","EVA-8 Auto","Volt SMG","G7 Scout","C.A.R. SMG","Sentinel","Longbow DMR","HAVOC Rifle","R-301 Carbine","M600 Spitfire","Mastiff Shotgun","Devotion LMG","30-30 Repeater","Peacekeeper","Kraber .50-Cal Sniper","Nemesis Burst AR","Rampage LMG","Wingman"];
+    const WEAPON_CLASS = {"RE-45 Auto":"Pistol","Bocek Compound Bow":"Marksman","Alternator SMG":"SMG","P2020":"Pistol","Charge Rifle":"Sniper","Prowler Burst PDW":"SMG","Mozambique Shotgun":"Shotgun","L-STAR EMG":"LMG","R-99 SMG":"SMG","Hemlok Burst AR":"AR","Triple Take":"Marksman","VK-47 Flatline":"AR","EVA-8 Auto":"Shotgun","Volt SMG":"SMG","G7 Scout":"Marksman","C.A.R. SMG":"SMG","Sentinel":"Sniper","Longbow DMR":"Sniper","HAVOC Rifle":"AR","R-301 Carbine":"AR","M600 Spitfire":"LMG","Mastiff Shotgun":"Shotgun","Devotion LMG":"LMG","30-30 Repeater":"Marksman","Peacekeeper":"Shotgun","Kraber .50-Cal Sniper":"Sniper","Nemesis Burst AR":"AR","Rampage LMG":"LMG","Wingman":"Pistol"};
+    const CARE_PACKAGE = ["C.A.R. SMG","G7 Scout","Kraber .50-Cal Sniper"];
+    const GROUND_GUNS = GUNS.filter(g => !CARE_PACKAGE.includes(g));
+    const PISTOLS = GUNS.filter(g => WEAPON_CLASS[g] === "Pistol");
+
+    const legendImages = {"Alter":"179px-Alter_Legend_Card.webp","Ash":"179px-Ash_Legend_Card.webp","Ballistic":"179px-Ballistic_Legend_Card.webp","Bangalore":"179px-Bangalore_Legend_Card.webp","Bloodhound":"179px-Bloodhound_Legend_Card.webp","Catalyst":"179px-Catalyst_Legend_Card.webp","Caustic":"179px-Caustic_Legend_Card.webp","Conduit":"179px-Conduit_Legend_Card.webp","Crypto":"179px-Crypto_Legend_Card.webp","Fuse":"179px-Fuse_Legend_Card.webp","Gibraltar":"179px-Gibraltar_Legend_Card.webp","Horizon":"179px-Horizon_Legend_Card.webp","Lifeline":"179px-Lifeline_Legend_Card.webp","Loba":"179px-Loba_Legend_Card.webp","Mad Maggie":"179px-Mad_Maggie_Legend_Card.webp","Mirage":"179px-Mirage_Legend_Card.webp","Newcastle":"179px-Newcastle_Legend_Card.webp","Octane":"179px-Octane_Legend_Card.webp","Pathfinder":"179px-Pathfinder_Legend_Card.webp","Rampart":"179px-Rampart_Legend_Card.webp","Revenant":"179px-Revenant_Legend_Card.webp","Seer":"179px-Seer_Legend_Card.webp","Valkyrie":"179px-Valkyrie_Legend_Card.webp","Vantage":"179px-Vantage_Legend_Card.webp","Wattson":"179px-Wattson_Legend_Card.webp","Wraith":"179px-Wraith_Legend_Card.webp","Sparrow":"179px-Sparrow.jpg_Legend_Card.webp"};
+    const weaponImages = {"RE-45 Auto":"78px-RE-45_Auto.webp","Bocek Compound Bow":"85px-Bocek_Compound_Bow.webp","Alternator SMG":"86px-Alternator_SMG.webp","P2020":"88px-P2020.webp","Charge Rifle":"111px-Charge_Rifle.webp","Prowler Burst PDW":"115px-Prowler_Burst_PDW.webp","Wingman":"117px-Wingman.webp","Mozambique Shotgun":"136px-Mozambique_Shotgun.webp","L-STAR EMG":"162px-L-STAR_EMG.webp","R-99 SMG":"162px-R-99_SMG.webp","Hemlok Burst AR":"166px-Hemlok_Burst_AR.webp","Triple Take":"172px-Triple_Take.webp","VK-47 Flatline":"180px-VK-47_Flatline.webp","EVA-8 Auto":"189px-EVA-8_Auto.webp","Volt SMG":"190px-Volt_SMG.webp","G7 Scout":"200px-G7_Scout.webp","C.A.R. SMG":"203px-C.A.R._SMG.webp","Sentinel":"203px-Sentinel.webp","Longbow DMR":"209px-Longbow_DMR.webp","HAVOC Rifle":"214px-HAVOC_Rifle.webp","R-301 Carbine":"218px-R-301_Carbine.webp","M600 Spitfire":"219px-M600_Spitfire.webp","Mastiff Shotgun":"232px-Mastiff_Shotgun.webp","Devotion LMG":"242px-Devotion_LMG.webp","30-30 Repeater":"248px-30-30_Repeater.webp","Peacekeeper":"250px-Peacekeeper.webp","Kraber .50-Cal Sniper":"251px-Kraber_50-Cal_Sniper.webp","Nemesis Burst AR":"251px-Nemesis_Burst_AR.webp","Rampage LMG":"252px-Rampage_LMG.webp"};
+
+    let state = null;
+    let activeTab = "p1";
+    let tabsEnabled = false;
+    let isRolling = false;
+
+    function createInitialState(){
+      return { legendCycle:1, gunCycle:1, chaosUsedThisGunCycle:false, remainingLegends:[...CHARACTERS], remainingGuns:[...GROUND_GUNS], p1LastLegend:null, p2LastLegend:null, p1LastGuns:null, p2LastGuns:null, currentRoll:null };
+    }
+
+    function shuffle(arr){ const c=[...arr]; for(let i=c.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [c[i],c[j]]=[c[j],c[i]];} return c; }
+    function combinations(arr,k){ const res=[]; const cur=[]; function walk(start){ if(cur.length===k){res.push([...cur]); return;} for(let i=start;i<=arr.length-(k-cur.length);i++){ cur.push(arr[i]); walk(i+1); cur.pop(); } } if(k<=0||k>arr.length) return res; walk(0); return res; }
+    function sortedCombo(combo){ return [...combo].sort(); }
+    function comboKey(combo){ return sortedCombo(combo).join("||"); }
+    function combosEqual(a,b){ return !!a && !!b && comboKey(a)===comboKey(b); }
+    function overlaps(a,b){ const s=new Set(a); return b.some(x=>s.has(x)); }
+    function gunCountForLegend(legend){ return legend==="Ballistic"?3:2; }
+    function hasUniqueClasses(combo){ const classes=combo.map(g=>WEAPON_CLASS[g]); return classes.length===new Set(classes).size; }
+    function isValidNormalCombo(combo,lastCombo){ if(new Set(combo).size!==combo.length) return false; if(!hasUniqueClasses(combo)) return false; if(lastCombo&&combosEqual(combo,lastCombo)) return false; return true; }
+
+    function buildLegendPairs(s){
+      const pairs=[]; const legends=s.remainingLegends||[];
+      for(const l1 of legends){
+        if(l1===s.p1LastLegend) continue;
+        for(const l2 of legends){
+          if(l1===l2) continue;
+          if(l2===s.p2LastLegend) continue;
+          pairs.push([l1,l2]);
+        }
+      }
+      return shuffle(pairs);
+    }
+    function hasAnyValidLegendPair(s){ return buildLegendPairs(s).length>0; }
+    function getValidCombos(pool,count,lastCombo){ return shuffle(combinations(pool,count).filter(c=>isValidNormalCombo(c,lastCombo))); }
+
+    function findStandardOption(s){
+      const pool=s.remainingGuns||[]; const pairs=buildLegendPairs(s); if(!pairs.length) return null;
+      const p1Combos2=getValidCombos(pool,2,s.p1LastGuns);
+      const p1Combos3=getValidCombos(pool,3,s.p1LastGuns);
+      const p2Combos2=getValidCombos(pool,2,s.p2LastGuns);
+      const p2Combos3=getValidCombos(pool,3,s.p2LastGuns);
+      for(const [legend1,legend2] of pairs){
+        const count1=gunCountForLegend(legend1), count2=gunCountForLegend(legend2);
+        if(pool.length < count1+count2) continue;
+        const c1List = count1===3 ? p1Combos3 : p1Combos2;
+        const c2List = count2===3 ? p2Combos3 : p2Combos2;
+        for(const guns1 of c1List){
+          for(const guns2 of c2List){
+            if(!overlaps(guns1,guns2)) return {legend1,legend2,guns1:[...guns1],guns2:[...guns2],chaosMode:null};
+          }
+        }
+      }
+      return null;
+    }
+
+    function buildPistolChaosOption(s, legend1, legend2){
+      const count1=gunCountForLegend(legend1), count2=gunCountForLegend(legend2);
+      if(count1>PISTOLS.length || count2>PISTOLS.length) return null;
+      let p1Options=combinations(PISTOLS,count1), p2Options=combinations(PISTOLS,count2);
+      const p1Filtered=p1Options.filter(c=>!s.p1LastGuns||!combosEqual(c,s.p1LastGuns));
+      const p2Filtered=p2Options.filter(c=>!s.p2LastGuns||!combosEqual(c,s.p2LastGuns));
+      if(p1Filtered.length) p1Options=p1Filtered;
+      if(p2Filtered.length) p2Options=p2Filtered;
+      p1Options=shuffle(p1Options); p2Options=shuffle(p2Options);
+      if(!p1Options.length || !p2Options.length) return null;
+      return { legend1, legend2, guns1:[...p1Options[0]], guns2:[...p2Options[0]], chaosMode:"pistol" };
+    }
+
+    function buildSwapChaosOption(s, standardOption){
+      if(standardOption.guns1.length !== standardOption.guns2.length) return null;
+      const swapped1=[...standardOption.guns2], swapped2=[...standardOption.guns1];
+      if(s.p1LastGuns && combosEqual(swapped1,s.p1LastGuns)) return null;
+      if(s.p2LastGuns && combosEqual(swapped2,s.p2LastGuns)) return null;
+      return { legend1:standardOption.legend1, legend2:standardOption.legend2, guns1:swapped1, guns2:swapped2, chaosMode:"swap" };
+    }
+
+    function getChaosCandidates(s, standardOption){
+      const modes=[]; const swap=buildSwapChaosOption(s,standardOption); if(swap) modes.push(swap);
+      const pistol=buildPistolChaosOption(s,standardOption.legend1,standardOption.legend2); if(pistol) modes.push(pistol);
+      return shuffle(modes);
+    }
+
+    function removeItems(source,items){ const set=new Set(items); return source.filter(item=>!set.has(item)); }
+
+    function applyCommittedRoll(s, option, previewOption=null){
+      s.p1LastLegend=option.legend1; s.p2LastLegend=option.legend2;
+      s.p1LastGuns=sortedCombo(option.guns1); s.p2LastGuns=sortedCombo(option.guns2);
+      s.remainingLegends=removeItems(s.remainingLegends,[option.legend1,option.legend2]);
+      s.remainingGuns=removeItems(s.remainingGuns,[...new Set([...option.guns1,...option.guns2])]);
+      if(option.chaosMode) s.chaosUsedThisGunCycle=true;
+      s.currentRoll = {
+        chaosMode: option.chaosMode || null,
+        p1:{ name:PLAYER_ONE, legend:option.legend1, guns:[...option.guns1] },
+        p2:{ name:PLAYER_TWO, legend:option.legend2, guns:[...option.guns2] },
+        previewP1Guns: previewOption ? [...previewOption.guns1] : null,
+        previewP2Guns: previewOption ? [...previewOption.guns2] : null
+      };
+    }
+
+    function simulateFutureRollExists(currentState, committedOption){
+      const temp=JSON.parse(JSON.stringify(currentState));
+      applyCommittedRoll(temp, committedOption, null);
+      if(temp.remainingLegends.length<2 || !hasAnyValidLegendPair(temp)) temp.remainingLegends=[...CHARACTERS];
+      return !!findStandardOption(temp);
+    }
+
+    function rollEngine(s){
+      const working=JSON.parse(JSON.stringify(s));
+      let guard=0;
+      while(guard<10){
+        guard+=1;
+        if(working.remainingLegends.length<2 || !hasAnyValidLegendPair(working)){
+          working.remainingLegends=[...CHARACTERS];
+          working.legendCycle+=1;
+        }
+        let standardOption=findStandardOption(working);
+        if(!standardOption){
+          working.remainingGuns=[...GROUND_GUNS];
+          working.gunCycle+=1;
+          working.chaosUsedThisGunCycle=false;
+          continue;
+        }
+        let finalOption=standardOption;
+        const chaosCandidates=getChaosCandidates(working,standardOption);
+        let triggerChaos=Math.random()<CHAOS_CHANCE;
+        if(!working.chaosUsedThisGunCycle && !triggerChaos){
+          const futureExists=simulateFutureRollExists(working,standardOption);
+          if(!futureExists && chaosCandidates.length) triggerChaos=true;
+        }
+        if(triggerChaos && chaosCandidates.length) finalOption=chaosCandidates[0];
+        const previewOption=finalOption.chaosMode ? standardOption : null;
+        applyCommittedRoll(working, finalOption, previewOption);
+        return working;
+      }
+      throw new Error("Could not generate a valid roll.");
+    }
+
+    function renderWeaponRows(guns){
+      const container=document.getElementById("weapons");
+      container.innerHTML=guns.map((gun,idx)=>`
+        <div class="weapon-row">
+          <div id="weapon_img_${idx}" class="weapon-thumb-wrap">IMG</div>
+          <div><div class="weapon-name">${gun}</div><div class="weapon-class">${WEAPON_CLASS[gun] || "Weapon"}</div></div>
+        </div>
+      `).join("");
+      guns.forEach((gun,idx)=>{
+        const holder=document.getElementById(`weapon_img_${idx}`);
+        const file=weaponImages[gun];
+        if(file) holder.innerHTML=`<img class="weapon-thumb" src="assets/weapons/${file}" alt="${gun}" onerror="this.parentElement.textContent='IMG'">`;
+      });
+    }
+
+    function setLegendImage(legendName){
+      const wrap=document.getElementById("legendWrap");
+      const file=legendImages[legendName];
+      if(!file){ wrap.innerHTML=`<div class="legend-fallback">${legendName}</div>`; return; }
+      wrap.innerHTML=`<img class="legend-image" src="assets/legends/${file}" alt="${legendName}" onerror="this.parentElement.innerHTML='<div class=&quot;legend-fallback&quot;>${legendName}</div>'">`;
+    }
+
+    function renderCard(playerLabel, rollSide){
+      document.getElementById("playerName").textContent=playerLabel;
+      document.getElementById("legendName").textContent=rollSide.legend;
+      renderWeaponRows(rollSide.guns);
+      setLegendImage(rollSide.legend);
+    }
+
+    function renderStats(){
+      document.getElementById("legendCycleValue").textContent=state.legendCycle;
+      document.getElementById("gunCycleValue").textContent=state.gunCycle;
+      document.getElementById("legendsLeftValue").textContent=state.remainingLegends.length;
+      document.getElementById("gunsLeftValue").textContent=state.remainingGuns.length;
+      document.getElementById("remainingLegendsList").innerHTML=state.remainingLegends.map(x=>`<span class="pool-chip">${x}</span>`).join("") || `<span class="pool-chip">None</span>`;
+      document.getElementById("remainingGunsList").innerHTML=state.remainingGuns.map(x=>`<span class="pool-chip">${x}</span>`).join("") || `<span class="pool-chip">None</span>`;
+    }
+
+    function setTabsEnabled(enabled){
+      tabsEnabled=enabled;
+      document.getElementById("showDjBtn").disabled=!enabled;
+      document.getElementById("showTvdbBtn").disabled=!enabled;
+    }
+
+    function setActiveTab(tab){
+      activeTab=tab;
+      document.getElementById("showDjBtn").classList.toggle("active", tab==="p1");
+      document.getElementById("showTvdbBtn").classList.toggle("active", tab==="p2");
+      if(!state.currentRoll) return;
+      if(tab==="p1") renderCard(PLAYER_ONE,state.currentRoll.p1);
+      if(tab==="p2") renderCard(PLAYER_TWO,state.currentRoll.p2);
+    }
+
+    function resetUI(){
+      document.getElementById("stage").textContent="Ready";
+      document.getElementById("chaosBanner").classList.remove("show");
+      document.getElementById("chaosText").textContent="-";
+      document.getElementById("playerName").textContent=PLAYER_ONE;
+      document.getElementById("legendName").textContent="Waiting...";
+      document.getElementById("weapons").innerHTML="";
+      document.getElementById("legendWrap").innerHTML=`<div class="legend-fallback">Waiting...</div>`;
+      setTabsEnabled(false);
+      document.getElementById("showDjBtn").classList.add("active");
+      document.getElementById("showTvdbBtn").classList.remove("active");
+      activeTab="p1";
+      renderStats();
+    }
+
+    function wait(ms){ return new Promise(resolve=>setTimeout(resolve,ms)); }
+
+    async function revealSequence(roll){
+      document.getElementById("chaosBanner").classList.remove("show");
+      setTabsEnabled(false);
+
+      document.getElementById("stage").textContent="Incoming: Dj Read";
+      await wait(350);
+      renderCard(PLAYER_ONE, roll.chaosMode && roll.previewP1Guns ? { ...roll.p1, guns: roll.previewP1Guns } : roll.p1);
+
+      document.getElementById("stage").textContent=`${roll.p1.legend} locked in`;
+      await wait(620);
+
+      document.getElementById("stage").textContent="Incoming: Tvdb";
+      await wait(260);
+      renderCard(PLAYER_TWO, roll.chaosMode && roll.previewP2Guns ? { ...roll.p2, guns: roll.previewP2Guns } : roll.p2);
+
+      document.getElementById("stage").textContent=`${roll.p2.legend} locked in`;
+      await wait(420);
+
+      if(roll.chaosMode){
+        document.getElementById("chaosText").textContent=roll.chaosMode==="swap" ? "Both players must swap guns" : "Pistol only";
+        document.getElementById("stage").textContent="Wait for it...";
+        await wait(340);
+        document.getElementById("chaosBanner").classList.add("show");
+        document.getElementById("stage").textContent=roll.chaosMode==="swap" ? "CHAOS: Swap Weapons" : "CHAOS: Pistols Only";
+
+        if(roll.chaosMode==="swap" && roll.previewP1Guns && roll.previewP2Guns){
+          await wait(650);
+          renderCard(PLAYER_TWO, roll.p2);
+        }
+
+        if(roll.chaosMode==="pistol" && roll.previewP1Guns && roll.previewP2Guns){
+          await wait(650);
+          renderCard(PLAYER_TWO, roll.p2);
+        }
+      } else {
+        document.getElementById("stage").textContent="Loadouts ready";
+      }
+
+      setTabsEnabled(true);
+      setActiveTab("p1");
+    }
+
+    async function handleRoll(){
+      if(isRolling) return;
+      isRolling=true;
+      document.getElementById("rollBtn").disabled=true;
+      document.getElementById("resetBtn").disabled=true;
+      document.getElementById("stage").textContent="Rolling...";
+      try{
+        state=rollEngine(state);
+        renderStats();
+        await revealSequence(state.currentRoll);
+      } catch(e){
+        console.error(e);
+        document.getElementById("stage").textContent="Roll failed";
+      } finally {
+        isRolling=false;
+        document.getElementById("rollBtn").disabled=false;
+        document.getElementById("resetBtn").disabled=false;
+      }
+    }
+
+    function handleReset(){ state=createInitialState(); resetUI(); }
+
+    document.getElementById("rollBtn").addEventListener("click", handleRoll);
+    document.getElementById("resetBtn").addEventListener("click", handleReset);
+    document.getElementById("showDjBtn").addEventListener("click", ()=>{ if(tabsEnabled) setActiveTab("p1"); });
+    document.getElementById("showTvdbBtn").addEventListener("click", ()=>{ if(tabsEnabled) setActiveTab("p2"); });
+    document.getElementById("moreBtn").addEventListener("click", ()=>{ const content=document.getElementById("moreContent"); const open=content.classList.toggle("open"); document.getElementById("moreBtn").textContent=open?"Less":"More"; });
+
+    state=createInitialState();
+    resetUI();
+  </script>
+</body>
+</html>
